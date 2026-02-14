@@ -4,6 +4,19 @@ const loadLessons = async() => {
     displayLessons(json.data);
 }
 
+const showDefaultMessage = () => {
+    const wordContainer = document.getElementById("word-container");
+    wordContainer.innerHTML = `
+        <div class="text-center col-span-full rounded-xl py-10 space-y-6">
+            <p class="text-xl font-medium text-gray-500">
+                আপনি এখনো কোন Lesson Select করেন ন
+            </p>
+            <h2 class="text-3xl font-bold font-bangla">
+                একটি Lesson Select করুন।
+            </h2>
+        </div>
+    `;
+}
 const displayLessons = (lessons) => {
     //console.log(lessons);
     const levelContainer = document.getElementById("level-container");
@@ -66,3 +79,4 @@ const displayLevelWords = (words) => {
 }
 
 loadLessons();
+showDefaultMessage();
