@@ -3,6 +3,12 @@ const createSynonyms = (synonyms) =>{
     return(htmlElements.join(" "));
 }
 
+function pronounceWord(word) {
+  const utterance = new SpeechSynthesisUtterance(word);
+  utterance.lang = "en-EN"; // English
+  window.speechSynthesis.speak(utterance);
+}
+
 const managespinner = (status) => {
     if(status == true) 
     {
@@ -137,7 +143,7 @@ const displayLevelWords = (words) => {
              } / ${word.pronunciation ? word.pronunciation: "Pronunciation Not Found" }"</div>
             <div class="flex justify-between">
                 <button onclick="loadWordDetail(${word.id})"  class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80] "><i class="fa-solid fa-circle-info"></i></button>
-                <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-volume-high"></i></button>
+                <button onclick =pronounceWord('${word.word}') class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-volume-high"></i></button>
             </div>
         </div>
         `;
