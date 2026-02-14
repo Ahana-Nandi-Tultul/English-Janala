@@ -1,3 +1,21 @@
+const createSynonyms = (synonyms) =>{
+    const htmlElements = synonyms.map(el => `<span class="btn">${el}<span>`);
+    return(htmlElements.join(" "));
+}
+
+const managespinner = (status) => {
+    if(status == true) 
+    {
+        document.getElementById('spinner-container').classList.remove('hidden');
+        document.getElementById('word-container').classList.add('hidden');
+    }
+    else
+    {
+        document.getElementById('spinner-container').classList.add('hidden');
+        document.getElementById('word-container').classList.remove('hidden');
+    }
+}
+
 const loadLessons = async() => {
     const res = await fetch("https://openapi.programming-hero.com/api/levels/all");
     const json = await res.json();
@@ -41,6 +59,7 @@ const displayLessons = (lessons) => {
 }
 
 const loadLevelWord = async(level) => {
+    managespinner(true);
     const url = `https://openapi.programming-hero.com/api/level/${level}`;
     const res = await fetch(url);
     const data = await res.json();
@@ -50,6 +69,40 @@ const loadLevelWord = async(level) => {
 
     clickbtn.classList.add('active')
     displayLevelWords(data.data);
+}
+
+
+const loadWordDetail = async(id) =>{
+    const url = `https://openapi.programming-hero.com/api/word/${id}`;
+
+    const res = await fetch(url);
+    const json =await res.json();
+    displayWordDetails(json.data);
+}
+
+const displayWordDetails = (word) => {
+    // console.log(word);
+    const detailsContainer = document.getElementById('details-container');
+    detailsContainer.innerHTML=`
+    <div class="">
+            <h2 class="text-2xl font-bold">${word.word} ( <i class="fa-solid fa-microphone-lines"></i> :
+            ${word.pronunciation})</h2>
+
+        </div>
+        <div class="">
+             <h2 class="font-bold">Meaning</h2>
+            <p>${word.meaning}</p>
+        </div>
+        <div class="">
+             <h2 class="font-bold">Example</h2>
+            <p>${word.sentence}</p>
+        </div>
+        <div class="">
+             <h2 class="font-bold">Synonym</h2>
+             <div class="">${createSynonyms(word.synonyms)}</div>
+        </div>
+    `;
+    document.getElementById('word_modal').showModal();
 }
 
 const displayLevelWords = (words) => {
@@ -68,6 +121,7 @@ const displayLevelWords = (words) => {
 
             </div>
     `;
+        managespinner(false);
         return;
     }
 
@@ -82,13 +136,14 @@ const displayLevelWords = (words) => {
                 "Meaning Not Found"
              } / ${word.pronunciation ? word.pronunciation: "Pronunciation Not Found" }"</div>
             <div class="flex justify-between">
-                <button  class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80] "><i class="fa-solid fa-circle-info"></i></button>
+                <button onclick="loadWordDetail(${word.id})"  class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80] "><i class="fa-solid fa-circle-info"></i></button>
                 <button class="btn bg-[#1A91FF10] hover:bg-[#1A91FF80]"><i class="fa-solid fa-volume-high"></i></button>
             </div>
         </div>
         `;
         wordContainer.append(card);
     })
+    managespinner(false);
 }
 
 loadLessons();
